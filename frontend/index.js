@@ -2,10 +2,17 @@ function moduleProject3() {
 
   // 👉 TASK 1 - Write a `buildNav` component that returns a nav
 
-  function buildNav(links) {
-    //  ✨ do your magic here
-    return document.createElement('nav')
-  }
+  function buildNav(navLinks) {
+    const links = document.createElement(`nav`);
+    navLinks.forEach(nav => {
+      const link = document.createElement(`a`);
+      link.href = nav.href;
+      link.textContent = nav.textContent;
+      link.title = nav.title;
+      links.appendChild(link);
+    });
+    return links;
+    }
 
   // ❗ DOM creation using your `buildNav` component (do not change):
   document.querySelector('header').appendChild(buildNav([
@@ -19,7 +26,34 @@ function moduleProject3() {
   // 👉 TASK 2A - Write a `buildLearnerCard` component that returns a card
 
   function buildLearnerCard(learner, languages) {
-    //  ✨ do your magic here
+    const cardObj = document.createElement(`div`);
+    cardObj.className = `learner-card`
+
+    const name = document.createElement(`p`);
+    name.textContent = learner.fullName;
+
+    const id = document.createElement(`p`);
+    id.textContent = `Learner ID: ${learner.id}`
+
+    const bir = document.createElement(`p`);
+    bir.textContent = `Date of Birth: ${learner.dateOfBirth}`
+
+    const lang = document.createElement(`p`);
+    const favLang = languages.find(l => l.id === learner.favLanguage);
+    lang.textContent = `Favorite Language: ${favLang.name}`
+
+    cardObj.appendChild(name);
+    cardObj.appendChild(id);
+    cardObj.appendChild(bir);
+    cardObj.appendChild(lang);
+
+    cardObj.addEventListener(`click`, E => {
+      document.querySelectorAll(`.learner-card`).forEach(card => {
+        card.classList.remove(`active`)
+      });
+      cardObj.classList.toggle(`active`)
+    });
+    return cardObj;
   }
 
   {
@@ -39,14 +73,54 @@ function moduleProject3() {
       { id: 41, fullName: 'Sabah Beydoun', dateOfBirth: '1988-03-25', favLanguage: 91 },
       { id: 17, fullName: 'Daniel Castillo', dateOfBirth: '1995-11-05', favLanguage: 12 }
     ]
-    //  ✨ do your magic here
+    learners.forEach(learner => {
+      const learnerCard = buildLearnerCard(learner, languages);
+      document.querySelector(`section`).appendChild(learnerCard);
+      return learnerCard;
+    })
   }
 
   // 👉 TASK 3 - Write a `buildFooter` component that returns a footer
 
   function buildFooter(footerData) {
-    //  ✨ do your magic here
-    return document.createElement('footer')
+    const foot = document.createElement(`footer`);
+    foot.className = `footer`;
+
+    const cInfo = document.createElement(`div`);
+    cInfo.className = `company-info`;
+
+    const cName = document.createElement(`p`);
+    cName.className = `comapny-name`;
+    cName.textContent = `${footerData.companyName}`;
+
+    const cAdd = document.createElement(`p`);
+    cAdd.className = `address`;
+    cAdd.textContent = `${footerData.address}`;
+
+    const email = document.createElement(`p`);
+    email.className = `contact-email`;
+    email.innerHTML = `Email: <a href="mailto:${footerData.contactEmail}"> ${footerData.contactEmail}</a>`;
+
+    cInfo.appendChild(cName);
+    cInfo.appendChild(cAdd);
+    cInfo.appendChild(email);
+    foot.appendChild(cInfo);
+
+    const socials = document.createElement(`div`);
+    socials.className = `social-media`;
+    for (let social in footerData.socialMedia) {
+      const link = document.createElement(`a`);
+      link.href = footerData.socialMedia[social];
+      link.textContent = social.charAt(0).toUpperCase() + social.slice(1);
+      socials.appendChild(link);
+    }
+    foot.appendChild(socials);
+
+    const inst = document.createElement(`div`);
+    inst.textContent = `© BLOOM INSTITUTE OF TECHNOLOGY 2025`;
+    foot.appendChild(inst);
+
+    return foot;
   }
 
   // ❗ DOM creation using your `buildFooter` component (do not change):
@@ -63,7 +137,12 @@ function moduleProject3() {
 
   // 👉 TASK 4 - Clicking on the section should deactivate the active card
 
-  //  ✨ do your magic here
+  document.addEventListener(`click`, E => {
+    if (E.target === document.querySelector(`section`)) {
+      const toggleAllCards = document.querySelectorAll(`.learner-card`);
+      toggleAllCards.forEach(card => card.classList.remove(`active`));
+    }
+  });
 }
 
 // ❗ DO NOT CHANGE THIS CODE
